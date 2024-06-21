@@ -1,0 +1,11 @@
+{
+  "name": "signals",
+  "version": "1.0.0",
+  "description": "I'm going to write a basic signal implementation and maybe build some way to render HTML with them",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
