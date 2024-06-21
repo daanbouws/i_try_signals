@@ -1,4 +1,11 @@
-export const signal = <T>(defaultValue: T) => {
+type Signal<T> = {
+  get: () => T,
+  set: (value: T) => void,
+  peek: () => T,
+  subscribe: (fn: any) => void
+}
+
+export const signal = <T>(defaultValue: T): Signal<T> => {
   let _ = defaultValue
   const subscribers: Array<Function> = []
 
@@ -9,11 +16,11 @@ export const signal = <T>(defaultValue: T) => {
     }
   }
 
-  const get = () => {
+  const get = (): T => {
     return _
   }
 
-  const set = (value: T) => {
+  const set = (value: T): void => {
     _ = value
     notify()
   }
@@ -22,19 +29,35 @@ export const signal = <T>(defaultValue: T) => {
     return _
   }
 
+  const subscribe = (fn: any): void => {
+    subscribers.push(fn)
+  }
+
   return {
     get,
     set,
     peek,
+    subscribe,
   }
 }
 
-export const effect = (fn) => {
+export const effect = (fn: any, signals: Array<Signal<any>>) => {
+   signals.forEach(signal => signal.subscribe(fn))
+  try {
+    fn()
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+export const computed = (fn: any, signals: Array<Signal<any>>) => {
 
 }
 
-export const computed = (fn) => {
+const testSignal = signal(100)
 
-}
+effect(() => {
+  console.log(testSignal.get())
+}, [testSignal])
 
-// how to keep track of fn's that need to be ran?
+testSignal.set(101)
